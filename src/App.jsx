@@ -1,4 +1,4 @@
-import { React, useState } from "react";
+import { useState } from "react";
 
 function UserAddForm({ onAddUser }) {
   const [name, setName] = useState("");
@@ -49,9 +49,11 @@ function ConferencesAddForm({
 
     if (!selectedDate || !selectedTime || !topic) return;
 
-    const formattedAnswer = `${topic} - ${selectedTime} - ${selectedDate}`;
-
-    onAddConference(selectedUser, formattedAnswer);
+    onAddConference(selectedUser, {
+      topic,
+      date: selectedDate,
+      time: selectedTime,
+    });
 
     setSelectedDate("");
     setSelectedTime("");
@@ -66,7 +68,9 @@ function ConferencesAddForm({
         onChange={(e) => setSelectedUser(e.target.value)}
       >
         {users.map((user) => (
-          <option key={user.id}>{user.name}</option>
+          <option value={user.id} key={user.id}>
+            {user.name}
+          </option>
         ))}
       </select>
 
@@ -120,7 +124,9 @@ function ConferencesItem({ users, selectedUser, setUsers }) {
               <li key={i}>
                 <div>
                   <Button onClick={() => handleConferenceDeletion(i)}>X</Button>
-                  <span>{conference}</span>
+                  <span>
+                    {conference.topic} - {conference.date} - {conference.time}
+                  </span>
                 </div>
               </li>
             )),
@@ -197,26 +203,38 @@ function Button({ children, onClick }) {
 function App() {
   const userData = [
     {
-      id: 118839,
+      id: "118839",
       name: "Jennifer",
       picture: "https://i.pravatar.cc/48?u=118839",
       conferences: [
-        "Right of robots - 08:15 - 2026-10-07",
-        "John Pork : A telecommunication experience - 08:30 - 2026-10-19",
-        "How to make a site - 09:30 - 2026-12-27",
+        { topic: "Right of robots", time: "08:15", date: "2026-10-07" },
+        {
+          topic: "John Pork : A telecommunication experience",
+          time: "08:30",
+          date: "2026-10-19",
+        },
+        {
+          topic: "How to make a site",
+          time: "09:30",
+          date: "2026-12-27",
+        },
       ],
     },
     {
-      id: 112341,
+      id: "112341",
       name: "Mark",
       picture: "https://i.pravatar.cc/48?u=112341",
       conferences: [
-        "Right of robots - 08:15 - 2026-10-07",
-        "John Pork : A telecommunication experience - 08:30 - 2026-10-19",
+        { topic: "Right of robots", time: "08:15", date: "2026-10-07" },
+        {
+          topic: "John Pork : A telecommunication experience",
+          time: "08:30",
+          date: "2026-10-19",
+        },
       ],
     },
     {
-      id: 158584,
+      id: "158584",
       name: "Sam",
       picture: "https://i.pravatar.cc/48?u=158584",
       conferences: [],
@@ -244,13 +262,14 @@ function App() {
     setUsers((users) => [...users, newUser]);
   }
 
-  function handleAddConference(userName, newConference) {
-    const userId = users.find((user) => user.name === userName)?.id;
-
+  function handleAddConference(userId, newConference) {
     setUsers((users) =>
       users.map((user) =>
         user.id === userId
-          ? { ...user, conferences: [...user.conferences, newConference] }
+          ? {
+              ...user,
+              conferences: [...user.conferences, newConference],
+            }
           : user,
       ),
     );
