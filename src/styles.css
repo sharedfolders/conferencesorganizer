@@ -1,0 +1,65 @@
+@import "tailwindcss";
+
+.btn-primary {
+  @apply flex justify-center gap-1 py-2 text-sm text-white transition-colors duration-200 rounded-sm shadow-lg cursor-pointer min-w-26 bg-slate-700 hover:bg-slate-800;
+}
+
+.btn-input {
+  @apply flex justify-center gap-1 py-2 text-sm text-white transition-colors duration-200 rounded-sm cursor-pointer min-w-22 bg-slate-700 hover:bg-slate-800 hover:shadow-lg;
+}
+
+.btn-delete {
+  @apply w-5 h-5 text-sm text-white transition-colors duration-200 bg-red-700 rounded-sm cursor-pointer hover:bg-red-800;
+}
+
+.icon {
+  @apply w-5 h-5;
+}
+
+.form-input {
+  @apply flex flex-col items-center w-56 gap-1 p-2 border rounded-sm shadow-lg border-slate-700 max-h-16;
+}
+
+.conference-list {
+  @apply flex items-center gap-2 p-2 border rounded-sm shadow-lg w-fit border-slate-700 max-h-16;
+}
+
+.user-display {
+  @apply flex items-center max-w-sm gap-2 p-6 m-4 border rounded-sm shadow-lg border-slate-700 w-82 max-h-16;
+}
+
+.pfp {
+  @apply w-10 h-10 border rounded-full border-slate-700;
+}
+
+.form {
+  @apply flex flex-col items-center gap-4 m-4;
+}
+
+.footer {
+  @apply fixed bottom-0 left-0 flex items-center justify-center w-full gap-4 p-4 border-t text-slate-700 bg-slate-300 border-slate-700;
+}
+
+.user-list {
+  @apply flex flex-col items-center w-full gap-4 md:w-1/2 md:items-end;
+}
+
+.main-section {
+  @apply flex flex-col w-full max-w-6xl mx-auto md:gap-4 md:flex-row;
+}
+
+.forms-section {
+  @apply flex flex-col items-center w-full md:w-1/2 md:items-start;
+}
+
+.button-bar {
+  @apply flex justify-center p-4 my-4 border-y border-slate-700 bg-slate-300;
+}
+
+.title-bar {
+  @apply flex items-center justify-center gap-2 my-4;
+}
+
+.title-text {
+  @apply text-3xl font-bold text-center text-slate-700;
+}
