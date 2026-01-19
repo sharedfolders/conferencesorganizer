@@ -85,7 +85,7 @@ function App() {
   }
 
   return (
-    <>
+    <main className="pb-24">
       <TitleBar />
       <div className="button-bar">
         <AddSection
@@ -130,7 +130,7 @@ function App() {
         )}
       </div>
       <Footer />
-    </>
+    </main>
   );
 }
 
