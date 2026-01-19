@@ -25,11 +25,7 @@ export function UserDisplay({
           >
             {selectedUser === id ? (
               <>
-                <img
-                  src="../assets/close-square.svg"
-                  alt="X"
-                  className="icon"
-                />
+                <img src="./close-square.svg" alt="X" className="icon" />
                 <span>Close</span>
               </>
             ) : (
