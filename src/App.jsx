@@ -1,4 +1,5 @@
 import { useState } from "react";
+import "./style.css";
 
 function UserAddForm({ onAddUser }) {
   const [name, setName] = useState("");
@@ -15,21 +16,23 @@ function UserAddForm({ onAddUser }) {
 
   return (
     <form onSubmit={handleSubmit}>
-      <label>Name</label>
-      <input
+      <FormInput
         value={name}
         onChange={(e) => setName(e.target.value)}
         type="text"
+        label="Name"
+        className=""
       />
 
-      <label>Picture link</label>
-      <input
+      <FormInput
         value={picture}
         onChange={(e) => setPicture(e.target.value)}
         type="text"
+        className=""
+        label="Picture Link"
       />
 
-      <button>Add</button>
+      <Button>Add</Button>
     </form>
   );
 }
@@ -62,40 +65,44 @@ function ConferencesAddForm({
 
   return (
     <form onSubmit={handleSubmit}>
-      <label>Who</label>
-      <select
+      <FormSelect
         value={selectedUser}
         onChange={(e) => setSelectedUser(e.target.value)}
+        label="Who"
+        className=""
       >
         {users.map((user) => (
           <option value={user.id} key={user.id}>
             {user.name}
           </option>
         ))}
-      </select>
+      </FormSelect>
 
-      <label>What date</label>
-      <input
+      <FormInput
         value={selectedDate}
         onChange={(e) => setSelectedDate(e.target.value)}
         type="date"
-      ></input>
+        label="Date"
+        className=""
+      />
 
-      <label>What time</label>
-      <input
+      <FormInput
         value={selectedTime}
         onChange={(e) => setSelectedTime(e.target.value)}
         type="time"
-      ></input>
+        label="Time"
+        className=""
+      />
 
-      <label>What topic</label>
-      <input
+      <FormInput
         value={topic}
         onChange={(e) => setTopic(e.target.value)}
         type="text"
-      ></input>
+        label="Topic"
+        className=""
+      />
 
-      <button>Add</button>
+      <Button className={""}>Add</Button>
     </form>
   );
 }
@@ -136,7 +143,13 @@ function ConferencesItem({ users, selectedUser, setUsers }) {
   );
 }
 
-function UserList({ userData, selectedUser, setSelectedUser }) {
+function UserList({
+  userData,
+  selectedUser,
+  setSelectedUser,
+  onShowConferences,
+  showAddConferences,
+}) {
   return (
     <ul>
       {userData.map((user, index) => (
@@ -148,6 +161,8 @@ function UserList({ userData, selectedUser, setSelectedUser }) {
           conferences={user.conferences}
           onSelectedUser={setSelectedUser}
           selectedUser={selectedUser}
+          onShowConferences={onShowConferences}
+          showAddConferences={showAddConferences}
         />
       ))}
     </ul>
@@ -161,18 +176,30 @@ function UserDisplay({
   id,
   onSelectedUser,
   selectedUser,
+  onShowConferences,
+  showAddConferences,
 }) {
   return (
     <div>
       <img src={picture} alt={name} />
-      <h3>{name}</h3>
-      <p>Attending {conferences.length} conferences</p>
+      <div>
+        <h3>{name}</h3>
+        <p>Attending {conferences.length} conferences</p>
+      </div>
+
       {conferences.length != 0 ? (
         <Button onClick={() => onSelectedUser(selectedUser === id ? "" : id)}>
           {selectedUser === id ? "Close" : "Check"}
         </Button>
       ) : (
-        <p>Add conferences now !</p>
+        <Button
+          onClick={() => {
+            onSelectedUser(selectedUser === id ? "" : id);
+            onShowConferences();
+          }}
+        >
+          {showAddConferences ? "Close" : "Add Now !"}
+        </Button>
       )}
     </div>
   );
@@ -196,8 +223,12 @@ function AddSection({
   );
 }
 
-function Button({ children, onClick }) {
-  return <button onClick={onClick}>{children}</button>;
+function Button({ children, onClick, className }) {
+  return (
+    <button className={className} onClick={onClick}>
+      {children}
+    </button>
+  );
 }
 
 function App() {
@@ -240,7 +271,6 @@ function App() {
       conferences: [],
     },
   ];
-
   const [users, setUsers] = useState(userData);
   const [selectedUser, setSelectedUser] = useState("");
   const [showAddUser, setShowAddUser] = useState(false);
@@ -277,35 +307,63 @@ function App() {
 
   return (
     <>
-      <UserList
-        userData={users}
-        selectedUser={selectedUser}
-        setSelectedUser={setSelectedUser}
-      />
-      <AddSection
-        onShowAddUser={handleShowUser}
-        showAddUser={showAddUser}
-        onShowAddConferences={handleShowConferences}
-        showAddConferences={showAddConferences}
-      />
-      {showAddUser && <UserAddForm onAddUser={handleNewUser} users={users} />}
-      {showAddConferences && (
-        <ConferencesAddForm
+      <div>
+        <AddSection
+          onShowAddUser={handleShowUser}
+          showAddUser={showAddUser}
+          onShowAddConferences={handleShowConferences}
+          showAddConferences={showAddConferences}
+        />
+      </div>
+      <div>
+        <UserList
+          userData={users}
           selectedUser={selectedUser}
           setSelectedUser={setSelectedUser}
-          users={users}
-          onAddConference={handleAddConference}
+          onShowConferences={handleShowConferences}
+          showAddConferences={showAddConferences}
         />
-      )}
+        {showAddUser && <UserAddForm onAddUser={handleNewUser} users={users} />}
+        {showAddConferences && (
+          <ConferencesAddForm
+            selectedUser={selectedUser}
+            setSelectedUser={setSelectedUser}
+            users={users}
+            onAddConference={handleAddConference}
+          />
+        )}
+      </div>
 
-      {selectedUser !== "" && (
-        <ConferencesItem
-          users={users}
-          selectedUser={selectedUser}
-          setUsers={setUsers}
-        />
-      )}
+      <div>
+        {selectedUser !== "" && (
+          <ConferencesItem
+            users={users}
+            selectedUser={selectedUser}
+            setUsers={setUsers}
+          />
+        )}
+      </div>
     </>
+  );
+}
+
+function FormInput({ value, onChange, type, label, className }) {
+  return (
+    <div className={className}>
+      <label>{label}</label>
+      <input value={value} onChange={onChange} type={type}></input>
+    </div>
+  );
+}
+
+function FormSelect({ value, onChange, label, children, className }) {
+  return (
+    <div className={className}>
+      <label>{label}</label>
+      <select value={value} onChange={onChange}>
+        {children}
+      </select>
+    </div>
   );
 }
 
